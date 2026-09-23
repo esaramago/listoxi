@@ -1,42 +1,84 @@
-# sv
+# Listoxi 🛒
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+**Listoxi** is a modern, collaborative shopping and task list application designed with an **offline-first** architecture and real-time synchronization.
 
-## Creating a project
+Built with **Svelte 5** (Runes), **SvelteKit 2**, **Dexie.js** for local in-browser persistence, and **PocketBase** as the authentication and synchronization backend.
 
-If you're seeing this, you've probably already done this step. Congrats!
+---
 
-```sh
-# create a new project
-npx sv create my-app
+## ✨ Key Features
+
+- 📴 **Offline-First Architecture**: Work seamlessly without an internet connection. Data is stored locally via IndexedDB with [Dexie.js](https://dexie.com/).
+- 🔄 **Bidirectional Synchronization**: Automatic synchronization and conflict resolution with [PocketBase](https://pocketbase.io/) as soon as network connectivity is restored.
+- 👥 **Shared Lists**: Share shopping lists and collaborate with other users via email invitations.
+- 🎨 **Modern Interface & WebAwesome**: Clean, accessible UI components powered by `@awesome.me/webawesome`.
+- 🌓 **Dark / Light Mode**: Integrated support for toggling visual themes.
+- 🏷️ **Emoji Customization**: Personalize and quickly recognize lists using custom emoji tags.
+- 📦 **PWA / Service Worker**: Configured for rapid, reliable progressive web app installation across mobile and desktop devices.
+
+---
+
+## 🛠️ Tech Stack
+
+- **Frontend:** [Svelte 5](https://svelte.dev/) (using modern Runes: `$state`, `$derived`, `$effect`, `$props`)
+- **Meta-framework:** [SvelteKit 2](https://kit.svelte.dev/) configured with `@sveltejs/adapter-static`
+- **Language:** [TypeScript](https://www.typescriptlang.org/)
+- **Local Database (Offline):** [Dexie.js](https://dexie.com/) (IndexedDB)
+- **Backend & Auth:** [PocketBase](https://pocketbase.io/)
+- **Component Library:** [WebAwesome](https://webawesome.com/) (`@awesome.me/webawesome`)
+- **Bundler:** [Vite](https://vite.dev/)
+- **Package Manager:** [pnpm](https://pnpm.io/)
+- **Containerization:** Docker & Docker Compose (Nginx + PocketBase)
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- **Node.js** (v20+ recommended)
+- **pnpm** (recommended via Corepack: `corepack enable && corepack prepare pnpm@latest --activate`)
+- A running **PocketBase** instance (local or remote)
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/esaramago/listoxi.git
+cd listoxi
 ```
 
-To recreate this project with the same configuration:
+### 2. Install Dependencies
 
-```sh
-# recreate this project
-pnpm dlx sv@0.16.2 create --template minimal --types ts --add prettier eslint sveltekit-adapter="adapter:static" --install pnpm .
+```bash
+pnpm install
 ```
 
-## Developing
+### 3. Configure Environment Variables
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+Copy `.env.example` to create `.env`:
 
-```sh
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+```bash
+cp .env.example .env
 ```
 
-## Building
+Edit `.env` as required:
 
-To create a production version of your app:
-
-```sh
-npm run build
+```env
+# URL of your PocketBase instance (e.g. https://pb.listoxi.com or http://localhost:8090)
+PUBLIC_POCKETBASE_URL=http://localhost:8090
+ENV=development
 ```
 
-You can preview the production build with `npm run preview`.
+### 4. Run the Development Server
 
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+```bash
+pnpm run dev
+```
+
+The application will be available at `http://localhost:5173`.
+
+---
+
+## 📄 License
+
+This repository is private and/or governed by the terms specified by the repository owner.

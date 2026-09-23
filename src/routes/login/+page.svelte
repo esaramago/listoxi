@@ -7,7 +7,7 @@
 	let loading = $state(false)
 	let errorMsg = $state('')
 	let successMsg = $state('')
-	
+
 	let isResetMode = $state(false)
 
 	async function handleLogin(e: SubmitEvent) {
@@ -80,7 +80,7 @@
 							type="email"
 							placeholder="exemplo@email.com"
 							value={email}
-							oninput={(e: any) => email = e.target.value}
+							oninput={(e: any) => (email = e.target.value)}
 							required
 						></wa-input>
 
@@ -90,21 +90,17 @@
 							label="Palavra-passe"
 							placeholder="••••••••"
 							value={password}
-							oninput={(e: any) => password = e.target.value}
+							oninput={(e: any) => (password = e.target.value)}
 							required
 							password-toggle
 						></wa-input>
-            <button 
-              type="button" 
-              onclick={() => isResetMode = true}
-              class="btn-link"
-            >
-              Esqueceste-te da palavra-passe?
-            </button>
+						<button type="button" onclick={() => (isResetMode = true)} class="btn-link">
+							Esqueceste-te da palavra-passe?
+						</button>
 
-						<wa-button 
-							type="submit" 
-							variant="brand" 
+						<wa-button
+							type="submit"
+							variant="brand"
 							class="btn-submit"
 							loading={loading ? true : undefined}
 						>
@@ -121,24 +117,20 @@
 							type="email"
 							placeholder="exemplo@email.com"
 							value={email}
-							oninput={(e: any) => email = e.target.value}
+							oninput={(e: any) => (email = e.target.value)}
 							required
 						></wa-input>
 
-						<wa-button 
-							type="submit" 
-							variant="brand" 
+						<wa-button
+							type="submit"
+							variant="brand"
 							class="btn-submit"
 							loading={loading ? true : undefined}
 						>
 							Enviar instruções
 						</wa-button>
 
-						<button 
-							type="button" 
-							onclick={() => isResetMode = false}
-							class="btn-back"
-						>
+						<button type="button" onclick={() => (isResetMode = false)} class="btn-back">
 							Voltar para o Login
 						</button>
 					</Grid>

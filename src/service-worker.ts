@@ -3,7 +3,7 @@ import { build, files, prerendered, version } from '$service-worker'
 
 if (import.meta.env.DEV) {
 	self.addEventListener('install', () => {
-		(self as any).skipWaiting()
+		;(self as any).skipWaiting()
 	})
 
 	self.addEventListener('activate', (event: any) => {
@@ -19,11 +19,7 @@ if (import.meta.env.DEV) {
 } else {
 	const CACHE = `cache-${version}`
 
-	const ASSETS = [
-		...build,
-		...files,
-		...prerendered
-	]
+	const ASSETS = [...build, ...files, ...prerendered]
 
 	self.addEventListener('install', (event: any) => {
 		async function addFilesToCache() {
@@ -71,17 +67,19 @@ if (import.meta.env.DEV) {
 					return cachedResponse
 				}
 
-				return fetch(event.request).then((response) => {
-					if (response.status === 200) {
-						const responseClone = response.clone()
-						caches.open(CACHE).then((cache) => {
-							cache.put(event.request, responseClone)
-						})
-					}
-					return response
-				}).catch(() => {
-					return new Response('Offline content not available', { status: 503 })
-				})
+				return fetch(event.request)
+					.then((response) => {
+						if (response.status === 200) {
+							const responseClone = response.clone()
+							caches.open(CACHE).then((cache) => {
+								cache.put(event.request, responseClone)
+							})
+						}
+						return response
+					})
+					.catch(() => {
+						return new Response('Offline content not available', { status: 503 })
+					})
 			})
 		)
 	})

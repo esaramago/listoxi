@@ -20,30 +20,30 @@
 	const itemQuery = liveQuery(() => db.items.get(itemId))
 
 	$effect(() => {
-		const item = $itemQuery;
+		const item = $itemQuery
 		if (item) {
-			name = item.name;
-			quantity = item.quantity;
-			details = item.details;
-			bought = item.bought;
+			name = item.name
+			quantity = item.quantity
+			details = item.details
+			bought = item.bought
 		}
-	});
+	})
 
 	async function handleSave(e: SubmitEvent) {
-		e.preventDefault();
-		const itemName = name.trim();
-		if (!itemName) return;
+		e.preventDefault()
+		const itemName = name.trim()
+		if (!itemName) return
 
 		if (quantity < 1) {
-			errorMsg = 'A quantidade mínima é 1.';
-			return;
+			errorMsg = 'A quantidade mínima é 1.'
+			return
 		}
 
-		loading = true;
-		errorMsg = '';
+		loading = true
+		errorMsg = ''
 
 		try {
-			const currentItem = await db.items.get(itemId);
+			const currentItem = await db.items.get(itemId)
 			if (currentItem) {
 				await db.items.update(itemId, {
 					name: itemName,
@@ -51,18 +51,18 @@
 					details: details.trim(),
 					sync_status: currentItem.sync_status === 'created' ? 'created' : 'updated',
 					updated: new Date().toISOString()
-				});
-				
-				triggerSync();
-				goto(`/lists/${listId}`);
+				})
+
+				triggerSync()
+				goto(`/lists/${listId}`)
 			} else {
-				errorMsg = 'Produto não encontrado.';
+				errorMsg = 'Produto não encontrado.'
 			}
 		} catch (err: any) {
-			console.error(err);
-			errorMsg = err.message || 'Erro ao guardar alterações. Tente novamente.';
+			console.error(err)
+			errorMsg = err.message || 'Erro ao guardar alterações. Tente novamente.'
 		} finally {
-			loading = false;
+			loading = false
 		}
 	}
 </script>
@@ -83,9 +83,7 @@
 		{/if}
 
 		{#if !$itemQuery}
-			<div class="loading-state">
-				A carregar produto...
-			</div>
+			<div class="loading-state">A carregar produto...</div>
 		{:else}
 			<form onsubmit={handleSave}>
 				<Grid direction="column" gap="m">
@@ -94,7 +92,7 @@
 						label="Nome do Produto"
 						type="text"
 						value={name}
-						oninput={(e: any) => name = e.target.value}
+						oninput={(e: any) => (name = e.target.value)}
 						required
 					></wa-input>
 
@@ -104,7 +102,7 @@
 						type="number"
 						min="1"
 						value={quantity.toString()}
-						oninput={(e: any) => quantity = parseInt(e.target.value) || 1}
+						oninput={(e: any) => (quantity = parseInt(e.target.value) || 1)}
 						required
 					></wa-input>
 
@@ -112,14 +110,12 @@
 						id="item-details"
 						label="Detalhes / Observações"
 						value={details}
-						oninput={(e: any) => details = e.target.value}
+						oninput={(e: any) => (details = e.target.value)}
 						rows="3"
 					></wa-textarea>
 
 					<Grid gap="m" justify="end">
-						<wa-button  href="/lists/{listId}">
-							Cancelar
-						</wa-button>
+						<wa-button href="/lists/{listId}"> Cancelar </wa-button>
 						<wa-button type="submit" variant="brand" loading={loading ? true : undefined}>
 							Guardar Alterações
 						</wa-button>
@@ -131,7 +127,6 @@
 </div>
 
 <style>
-
 	.error-callout {
 		margin-bottom: var(--wa-space-m);
 	}

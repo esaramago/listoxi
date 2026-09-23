@@ -75,7 +75,7 @@
 					type="text"
 					placeholder="Ex: Leite, Pão, Maçãs..."
 					value={name}
-					oninput={(e: any) => name = e.target.value}
+					oninput={(e: any) => (name = e.target.value)}
 					required
 				></wa-input>
 
@@ -85,7 +85,7 @@
 					type="number"
 					min="1"
 					value={quantity.toString()}
-					oninput={(e: any) => quantity = parseInt(e.target.value) || 1}
+					oninput={(e: any) => (quantity = parseInt(e.target.value) || 1)}
 					required
 				></wa-input>
 
@@ -94,14 +94,12 @@
 					label="Detalhes / Observações"
 					placeholder="Ex: Marca própria, meio-gordo, pacote de 1L..."
 					value={details}
-					oninput={(e: any) => details = e.target.value}
+					oninput={(e: any) => (details = e.target.value)}
 					rows="3"
 				></wa-textarea>
 
 				<Grid gap="m" justify="end">
-					<wa-button  href="/lists/{listId}">
-						Cancelar
-					</wa-button>
+					<wa-button href="/lists/{listId}"> Cancelar </wa-button>
 					<wa-button type="submit" variant="brand" loading={loading ? true : undefined}>
 						Adicionar Produto
 					</wa-button>

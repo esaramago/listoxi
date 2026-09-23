@@ -6,7 +6,7 @@
 	import { triggerSync } from '@/lib/sync'
 	import Grid from '@/components/ui/Grid.svelte'
 	import Header from '@/components/Header.svelte'
-  import ProductCard from '@/components/ProductCard.svelte'
+	import ProductCard from '@/components/ProductCard.svelte'
 	import { pb } from '@/lib/pb'
 	import SyncBadge from '@/components/SyncBadge.svelte'
 
@@ -18,7 +18,7 @@
 		if ($list) {
 			const resolvedIds = $list.shared_with || []
 			const pending = $list.shared_emails || []
-			
+
 			memberEmails = [...pending]
 
 			if (resolvedIds.length > 0) {
@@ -76,7 +76,7 @@
 					return bTime - aTime
 				})
 			)
-	);
+	)
 
 	// Collapsible bought items state
 	let showBought = $state(false)
@@ -110,7 +110,7 @@
 	async function toggleBought(itemId: string) {
 		const item = await db.items.get(itemId)
 		if (!item) return
-    await db.items.update(itemId, {
+		await db.items.update(itemId, {
 			bought: !item.bought,
 			sync_status: item.sync_status === 'created' ? 'created' : 'updated',
 			updated: new Date().toISOString()
@@ -121,17 +121,17 @@
 	async function deleteItem(itemId: string) {
 		const item = await db.items.get(itemId)
 		if (!item) return
-    if (confirm('Tem a certeza que deseja apagar este produto?')) {
-      if (item.sync_status === 'created') {
-        await db.items.delete(itemId)
-      } else {
-        await db.items.update(itemId, {
-          sync_status: 'deleted',
-          updated: new Date().toISOString()
-        })
-      }
-      triggerSync()
-    }
+		if (confirm('Tem a certeza que deseja apagar este produto?')) {
+			if (item.sync_status === 'created') {
+				await db.items.delete(itemId)
+			} else {
+				await db.items.update(itemId, {
+					sync_status: 'deleted',
+					updated: new Date().toISOString()
+				})
+			}
+			triggerSync()
+		}
 	}
 
 	async function deleteList() {
@@ -178,9 +178,13 @@
 					<span>
 						{#if $list.emoji}
 							{$list.emoji}
-						{:else if $list.name.toLowerCase().includes('casa') || $list.name.toLowerCase().includes('padrões') || $list.name.toLowerCase().includes('louriceira')}
+						{:else if $list.name.toLowerCase().includes('casa') || $list.name
+								.toLowerCase()
+								.includes('padrões') || $list.name.toLowerCase().includes('louriceira')}
 							🏡
-						{:else if $list.name.toLowerCase().includes('lidl') || $list.name.toLowerCase().includes('continente') || $list.name.toLowerCase().includes('compras')}
+						{:else if $list.name.toLowerCase().includes('lidl') || $list.name
+								.toLowerCase()
+								.includes('continente') || $list.name.toLowerCase().includes('compras')}
 							🛒
 						{:else}
 							🍏
@@ -195,22 +199,28 @@
 				<div class="subtitle-container">
 					{#if ($list.shared_with && $list.shared_with.length > 0) || ($list.shared_emails && $list.shared_emails.length > 0)}
 						<div class="share-badge-container">
-							<button 
-								type="button" 
-								class="share-badge" 
-								onclick={(e) => { e.stopPropagation(); showMembersList = !showMembersList }}
+							<button
+								type="button"
+								class="share-badge"
+								onclick={(e) => {
+									e.stopPropagation()
+									showMembersList = !showMembersList
+								}}
 								title={shareTooltip}
 							>
 								<wa-icon name="user-group"></wa-icon>
 								<span>Partilhada</span>
 							</button>
-							
+
 							{#if showMembersList}
 								<div class="share-popover">
 									<div class="popover-header">Partilhada com:</div>
 									<ul class="popover-list">
 										{#if memberEmails.length === 0}
-											<li>Lista partilhada ({$list.shared_with.length} {$list.shared_with.length === 1 ? 'pessoa' : 'pessoas'})</li>
+											<li>
+												Lista partilhada ({$list.shared_with.length}
+												{$list.shared_with.length === 1 ? 'pessoa' : 'pessoas'})
+											</li>
 										{:else}
 											{#each memberEmails as email}
 												<li>👤 {email}</li>
@@ -239,77 +249,79 @@
 	</Header>
 
 	{#if $list}
+		<Grid direction="column" gap="l">
+			<!-- Action line with "Adicionar" button -->
+			<Grid justify="space-between" align="center">
+				{#if $list}
+					<div>
+						<SyncBadge />
+						<p>{$openItems ? $openItems.length : 0} produtos</p>
+					</div>
+				{/if}
+				<wa-button href="/lists/{listId}/create" appearance="plain" variant="brand">
+					<wa-icon name="plus"></wa-icon>
+					Adicionar produto
+				</wa-button>
+			</Grid>
 
-    <Grid direction="column" gap="l">
-      <!-- Action line with "Adicionar" button -->
-      <Grid justify="space-between" align="center">
-        {#if $list}
-          <div>
-            <SyncBadge />
-            <p>{$openItems ? $openItems.length : 0} produtos</p>
-          </div>
-        {/if}
-        <wa-button href="/lists/{listId}/create" appearance="plain" variant="brand">
-          <wa-icon name="plus"></wa-icon>
-          Adicionar produto
-        </wa-button>
-      </Grid>
+			<!-- Open Items -->
+			{#if !$openItems}
+				<div class="loading-products">A carregar produtos...</div>
+			{:else if $openItems.length === 0}
+				<div class="empty-products">Nenhum produto em falta.</div>
+			{:else}
+				<Grid direction="column" gap="xs">
+					{#each $openItems as item (item.id)}
+						<ProductCard
+							productName={item.name}
+							productQuantity={item.quantity}
+							productDetails={item.details}
+							productId={item.id}
+							{listId}
+							toggleBought={() => toggleBought(item.id)}
+							deleteItem={() => deleteItem(item.id)}
+							isBought={item.bought}
+						/>
+					{/each}
+				</Grid>
+			{/if}
 
-      <!-- Open Items -->
-      {#if !$openItems}
-        <div class="loading-products">
-          A carregar produtos...
-        </div>
-      {:else if $openItems.length === 0}
-        <div class="empty-products">
-          Nenhum produto em falta.
-        </div>
-      {:else}
-        <Grid direction="column" gap="xs">
-          {#each $openItems as item (item.id)}
-            <ProductCard
-              productName={item.name}
-              productQuantity={item.quantity}
-              productDetails={item.details}
-              productId={item.id}
-              {listId}
-              toggleBought={() => toggleBought(item.id)}
-              deleteItem={() => deleteItem(item.id)}
-              isBought={item.bought}
-            />
-          {/each}
-        </Grid>
-      {/if}
+			<!-- Collapsible Bought Items -->
+			<div>
+				<button
+					onclick={() => (showBought = !showBought)}
+					onkeydown={(e) => e.key === 'Enter' && (showBought = !showBought)}
+				>
+					<wa-icon name={showBought ? 'chevron-up' : 'chevron-down'} class="chevron-icon"></wa-icon>
+					<span
+						>Concluídos {showBought && boughtItemsData
+							? `(${boughtItemsData.length} itens)`
+							: ''}</span
+					>
+				</button>
 
-      <!-- Collapsible Bought Items -->
-      <div>
-        <button onclick={() => showBought = !showBought} onkeydown={(e) => e.key === 'Enter' && (showBought = !showBought)}>
-          <wa-icon name={showBought ? 'chevron-up' : 'chevron-down'} class="chevron-icon"></wa-icon>
-          <span>Concluídos {showBought && boughtItemsData ? `(${boughtItemsData.length} itens)` : ''}</span>
-        </button>
-
-        {#if showBought}
-          <div>
-            {#if boughtItemsData.length === 0}
-              <p>Nenhum produto concluído nesta lista.</p>
-            {:else}
-              {#each boughtItemsData as item (item.id)}
-                <ProductCard
-                  productName={item.name}
-                  productQuantity={item.quantity}
-                  productDetails={item.details}
-                  productId={item.id}
-                  isBought=true
-                  {listId}
-                  toggleBought={() => toggleBought(item.id)}
-                  deleteItem={() => deleteItem(item.id)}
-                />
-              {/each}
-            {/if}
-          </div>
-        {/if}
-      </div>
-    </Grid>
+				{#if showBought}
+					<div>
+						{#if boughtItemsData.length === 0}
+							<p>Nenhum produto concluído nesta lista.</p>
+						{:else}
+							{#each boughtItemsData as item (item.id)}
+								<ProductCard
+									productName={item.name}
+									productQuantity={item.quantity}
+									productDetails={item.details}
+									productId={item.id}
+									isBought="true"
+									{listId}
+									toggleBought={() => toggleBought(item.id)}
+									deleteItem={() => deleteItem(item.id)}
+								/>
+							{/each}
+						{/if}
+					</div>
+				{/if}
+			</div>
+		</Grid>
 	{/if}
 </div>
 
@@ -342,10 +354,13 @@
 		box-sizing: border-box;
 		cursor: pointer;
 		outline: none;
-		transition: background-color 0.2s, border-color 0.2s;
+		transition:
+			background-color 0.2s,
+			border-color 0.2s;
 	}
 
-	.share-badge:hover, .share-badge:focus {
+	.share-badge:hover,
+	.share-badge:focus {
 		background-color: var(--wa-color-brand-80);
 		border-color: var(--wa-color-brand-70);
 	}
@@ -418,7 +433,8 @@
 		border-color: var(--wa-color-brand-20);
 	}
 
-	:global(.wa-dark) .share-badge:hover, :global(.wa-dark) .share-badge:focus {
+	:global(.wa-dark) .share-badge:hover,
+	:global(.wa-dark) .share-badge:focus {
 		background-color: var(--wa-color-brand-20);
 		border-color: var(--wa-color-brand-30);
 	}
@@ -428,5 +444,4 @@
 		border-color: var(--wa-color-neutral-20);
 		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 	}
-
 </style>

@@ -3,20 +3,34 @@
 		value = $bindable(''),
 		label = 'Escolhe um Emoji'
 	}: {
-		value?: string;
-		label?: string;
-	} = $props();
+		value?: string
+		label?: string
+	} = $props()
 
 	const emojis = [
-		'🍏', '🛒', '🏡', '🍕', '💊', '🎒', '📚', '🛠️',
-		'🐶', '👕', '🎁', '⚡', '🎉', '🚗', '💼', '❤️'
+		'🍏',
+		'🛒',
+		'🏡',
+		'🍕',
+		'💊',
+		'🎒',
+		'📚',
+		'🛠️',
+		'🐶',
+		'👕',
+		'🎁',
+		'⚡',
+		'🎉',
+		'🚗',
+		'💼',
+		'❤️'
 	]
 
 	function selectEmoji(em: string) {
 		if (value === em) {
 			value = '' // Remove selection
 		} else {
-			value = em;
+			value = em
 		}
 	}
 </script>

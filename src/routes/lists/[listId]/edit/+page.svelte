@@ -26,7 +26,7 @@
 		if ($listData && !listLoaded) {
 			listName = $listData.name
 			selectedEmoji = $listData.emoji || ''
-			
+
 			const pending = ($listData.shared_emails || []).map((email: string) => ({
 				email,
 				isPending: true
@@ -58,7 +58,7 @@
 					sharedMembers = [...uniquePending, ...resolvedMembers]
 				})
 			}
-			
+
 			listLoaded = true
 		}
 	})
@@ -79,13 +79,11 @@
 
 			// Membros resolvidos que o utilizador manteve
 			const keptUserIds = sharedMembers
-				.filter(m => !m.isPending && m.id)
-				.map(m => m.id as string)
+				.filter((m) => !m.isPending && m.id)
+				.map((m) => m.id as string)
 
 			// Emails pendentes que o utilizador manteve ou adicionou
-			const currentPendingEmails = sharedMembers
-				.filter(m => m.isPending)
-				.map(m => m.email)
+			const currentPendingEmails = sharedMembers.filter((m) => m.isPending).map((m) => m.email)
 
 			let sharedWithUserIds = [...keptUserIds]
 			let pendingEmails: string[] = []
@@ -102,7 +100,13 @@
 					} catch (err: any) {
 						// Se for um erro do servidor permanente (como 400 ou 403) ou erro de perfil privado,
 						// mostramos o erro diretamente ao utilizador em vez de ignorar e guardar offline.
-						if (err.status === 400 || err.status === 403 || (err instanceof Error && !err.message.includes('fetch') && !err.message.includes('network'))) {
+						if (
+							err.status === 400 ||
+							err.status === 403 ||
+							(err instanceof Error &&
+								!err.message.includes('fetch') &&
+								!err.message.includes('network'))
+						) {
 							throw err
 						}
 						console.error(`Error resolving email ${email}, queuing offline:`, err)
@@ -135,7 +139,11 @@
 </script>
 
 <div class="container">
-	<Header backHref="/lists/{listId}" title="Editar Lista" subtitle="Altera o nome, emoji ou partilha da lista" />
+	<Header
+		backHref="/lists/{listId}"
+		title="Editar Lista"
+		subtitle="Altera o nome, emoji ou partilha da lista"
+	/>
 
 	{#if !$listData}
 		<div class="loading-state">A carregar detalhes da lista...</div>
@@ -156,7 +164,7 @@
 						type="text"
 						placeholder="Ex: Supermercado, Casa..."
 						value={listName}
-						oninput={(e: any) => listName = e.target.value}
+						oninput={(e: any) => (listName = e.target.value)}
 						required
 					></wa-input>
 
@@ -165,9 +173,7 @@
 					<ListSharing bind:sharedMembers />
 
 					<Grid gap="m" justify="end">
-						<wa-button href="/lists/{listId}">
-							Cancelar
-						</wa-button>
+						<wa-button href="/lists/{listId}"> Cancelar </wa-button>
 						<wa-button type="submit" variant="brand" loading={loading ? true : undefined}>
 							Guardar Alterações
 						</wa-button>

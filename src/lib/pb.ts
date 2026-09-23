@@ -2,7 +2,8 @@ import PocketBase from 'pocketbase'
 import { writable } from 'svelte/store'
 import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
 
-const PB_URL = PUBLIC_POCKETBASE_URL || (import.meta.env.DEV ? 'http://127.0.0.1:8090' : window.location.origin)
+const PB_URL =
+	PUBLIC_POCKETBASE_URL || (import.meta.env.DEV ? 'http://127.0.0.1:8090' : window.location.origin)
 
 export const pb = new PocketBase(PB_URL)
 
@@ -19,19 +20,19 @@ function generateRandomPassword(): string {
 	for (let i = 0; i < 16; i++) {
 		pass += chars.charAt(Math.floor(Math.random() * chars.length))
 	}
-	return pass;
+	return pass
 }
 
 // Invite user by email: returns user ID if found or newly created and invited
 export async function inviteUserByEmail(email: string): Promise<string> {
 	try {
 		const user = await pb.collection('users').getFirstListItem(`email="${email}"`)
-		return user.id;
+		return user.id
 	} catch (err: any) {
 		if (err.status === 404) {
 			const password = generateRandomPassword()
 			const username = 'user_' + Math.random().toString(36).substring(2, 10)
-			
+
 			try {
 				const newUser = await pb.collection('users').create({
 					email: email,
@@ -40,23 +41,26 @@ export async function inviteUserByEmail(email: string): Promise<string> {
 					username: username,
 					emailVisibility: true
 				})
-				
+
 				await pb.collection('users').requestPasswordReset(email)
-				
-				return newUser.id;
+
+				return newUser.id
 			} catch (createErr: any) {
-				console.error('Erro ao criar utilizador convidado:', createErr);
-				const isUniqueConstraint = createErr.status === 400 && 
-					(createErr.data?.email?.code === 'validation_invalid_email' || 
-					 JSON.stringify(createErr.data).toLowerCase().includes('unique') ||
-					 JSON.stringify(createErr.data).toLowerCase().includes('validation_invalid_email'));
-				
+				console.error('Erro ao criar utilizador convidado:', createErr)
+				const isUniqueConstraint =
+					createErr.status === 400 &&
+					(createErr.data?.email?.code === 'validation_invalid_email' ||
+						JSON.stringify(createErr.data).toLowerCase().includes('unique') ||
+						JSON.stringify(createErr.data).toLowerCase().includes('validation_invalid_email'))
+
 				if (isUniqueConstraint) {
-					throw new Error(`O utilizador com o email "${email}" já tem conta mas o seu perfil está privado.`);
+					throw new Error(
+						`O utilizador com o email "${email}" já tem conta mas o seu perfil está privado.`
+					)
 				}
-				throw createErr;
+				throw createErr
 			}
 		}
-		throw err;
+		throw err
 	}
 }

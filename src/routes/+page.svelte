@@ -10,7 +10,7 @@
 	// Reactive query for lists with their corresponding item counts
 	const listsWithCounts = liveQuery(async () => {
 		const allLists = await db.lists.where('sync_status').notEqual('deleted').toArray()
-		const result = [];
+		const result = []
 		for (const list of allLists) {
 			const count = await db.items
 				.where('list')
@@ -28,7 +28,7 @@
 		}
 	}
 
-	let isDark = $state(false);
+	let isDark = $state(false)
 
 	// Watch theme state
 	if (typeof window !== 'undefined') {
@@ -46,12 +46,9 @@
 		}
 	}
 
-  function goToAdmin() {
-    window.open(
-      'https://listoxi-admin.emanuelsaramago.com/_',
-      '_blank'
-    )
-  }
+	function goToAdmin() {
+		window.open('https://listoxi-admin.emanuelsaramago.com/_', '_blank')
+	}
 </script>
 
 <div class="container">
@@ -76,9 +73,7 @@
 
 	<div>
 		{#if !$listsWithCounts}
-			<div class="loading-state">
-				A carregar listas...
-			</div>
+			<div class="loading-state">A carregar listas...</div>
 		{:else if $listsWithCounts.length === 0}
 			<EmptyState
 				icon="cloud"
@@ -89,73 +84,72 @@
 				actionIcon="plus"
 			/>
 		{:else}
-      <Grid direction="column">
-        <Grid justify="space-between" align="center">
-				  <SyncBadge />
-          <wa-button href="/lists/create" variant="brand" appearance="plain">
-            <wa-icon name="plus"></wa-icon>
-            Adicionar lista
-          </wa-button>
-        </Grid>
-        {#each $listsWithCounts as list (list.id)}
-          <a href="/lists/{list.id}" class="card">
-            <wa-card>
-              <div>
-                {#if list.emoji}
-                  {list.emoji}
-                {:else}
-                  🍏
-                {/if}
-                <span>{list.name}</span>
-              </div>
-              <div class="card__count">
-                <span class="card__number">{list.count}</span>
-                <span class="card__label">
-                  {list.count === 1 ? 'produto' : 'produtos'}
-                </span>
-              </div>
-            </wa-card>
-          </a>
-        {/each}
-      </Grid>
+			<Grid direction="column">
+				<Grid justify="space-between" align="center">
+					<SyncBadge />
+					<wa-button href="/lists/create" variant="brand" appearance="plain">
+						<wa-icon name="plus"></wa-icon>
+						Adicionar lista
+					</wa-button>
+				</Grid>
+				{#each $listsWithCounts as list (list.id)}
+					<a href="/lists/{list.id}" class="card">
+						<wa-card>
+							<div>
+								{#if list.emoji}
+									{list.emoji}
+								{:else}
+									🍏
+								{/if}
+								<span>{list.name}</span>
+							</div>
+							<div class="card__count">
+								<span class="card__number">{list.count}</span>
+								<span class="card__label">
+									{list.count === 1 ? 'produto' : 'produtos'}
+								</span>
+							</div>
+						</wa-card>
+					</a>
+				{/each}
+			</Grid>
 		{/if}
 	</div>
-
 </div>
 
 <style>
-.loading-state {
-  text-align: center;
-  padding: var(--wa-space-2xl);
-  color: var(--wa-color-neutral-60);
-}
-.card {
-  display: flex;
-  width: 100%;
-  text-decoration: none;
-  justify-content: space-between;
-  font-weight: 700;
-  font-size: var(--wa-font-size-xl);
-  wa-card {
-    width: 100%;
-    &::part(body) {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-  }
-}
-.card__count {
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-}
-.card__number {
-  font-size: var(--wa-font-size-3xl);
-  font-weight: 900;
-}
-.card__label {
-  font-size: var(--wa-font-size-s);
-  font-weight: 400;
-}
+	.loading-state {
+		text-align: center;
+		padding: var(--wa-space-2xl);
+		color: var(--wa-color-neutral-60);
+	}
+	.card {
+		display: flex;
+		width: 100%;
+		text-decoration: none;
+		justify-content: space-between;
+		font-weight: 700;
+		font-size: var(--wa-font-size-xl);
+		wa-card {
+			width: 100%;
+			&::part(body) {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+			}
+		}
+	}
+	.card__count {
+		display: flex;
+		flex-direction: column;
+		text-align: center;
+	}
+	.card__number {
+		font-size: var(--wa-font-size-3xl);
+		font-weight: 900;
+	}
+	.card__label {
+		font-size: var(--wa-font-size-s);
+		font-weight: 400;
+	}
 </style>

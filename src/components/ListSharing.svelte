@@ -17,8 +17,8 @@
 	let registeredUsers = $state<any[]>([])
 
 	let availableUsers = $derived(
-		registeredUsers.filter((user: any) => 
-			!sharedMembers.some((member: SharedMember) => member.email === user.email)
+		registeredUsers.filter(
+			(user: any) => !sharedMembers.some((member: SharedMember) => member.email === user.email)
 		)
 	)
 
@@ -99,7 +99,12 @@
 								<span class="pending-badge">Pendente</span>
 							{/if}
 						</span>
-						<button type="button" onclick={() => removeMember(member)} class="btn-remove-email" title="Remover partilha">
+						<button
+							type="button"
+							onclick={() => removeMember(member)}
+							class="btn-remove-email"
+							title="Remover partilha"
+						>
 							&times;
 						</button>
 					</li>
