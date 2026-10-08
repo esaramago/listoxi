@@ -16,11 +16,7 @@
 	let errorMsg = $state('')
 	let registeredUsers = $state<any[]>([])
 
-	let availableUsers = $derived(
-		registeredUsers.filter(
-			(user: any) => !sharedMembers.some((member: SharedMember) => member.email === user.email)
-		)
-	)
+	let availableUsers = $derived(registeredUsers.filter((user: any) => !sharedMembers.some((member: SharedMember) => member.email === user.email)))
 
 	onMount(async () => {
 		try {
@@ -70,13 +66,7 @@
 		</wa-callout>
 	{/if}
 
-	<wa-select
-		id="share-user-select"
-		label="Partilhar com"
-		placeholder="Escolhe um utilizador..."
-		onchange={handleUserSelect}
-		class="input-grow"
-	>
+	<wa-select id="share-user-select" label="Partilhar com" placeholder="Escolhe um utilizador..." onchange={handleUserSelect} class="input-grow">
 		{#each availableUsers as user}
 			<wa-option value={user.email}>
 				{user.name || user.username || user.email} ({user.email})
@@ -99,14 +89,7 @@
 								<span class="pending-badge">Pendente</span>
 							{/if}
 						</span>
-						<button
-							type="button"
-							onclick={() => removeMember(member)}
-							class="btn-remove-email"
-							title="Remover partilha"
-						>
-							&times;
-						</button>
+						<button type="button" onclick={() => removeMember(member)} class="btn-remove-email" title="Remover partilha"> &times; </button>
 					</li>
 				{/each}
 			</ul>

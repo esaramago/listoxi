@@ -46,7 +46,7 @@ if (import.meta.env.DEV) {
 		const url = new URL(event.request.url)
 
 		// Don't intercept pocketbase requests
-		if (url.port === '8090' || url.pathname.includes('/api/')) {
+		if (url.port === '8090' || url.pathname.includes('/api/') || url.hostname.includes('admin')) {
 			return
 		}
 

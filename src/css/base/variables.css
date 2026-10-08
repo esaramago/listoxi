@@ -1,8 +1,7 @@
 @layer module, state;
 
 :root {
-	--font-family-body:
-		'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+	--font-family-body: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 	--default-font-size: 1.6rem;
 }
 

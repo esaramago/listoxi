@@ -68,11 +68,7 @@
 </script>
 
 <div class="container">
-	<Header
-		backHref="/lists/{listId}"
-		title="Editar Produto"
-		subtitle="Modifique os dados do produto"
-	/>
+	<Header backHref="/lists/{listId}" title="Editar Produto" subtitle="Modifique os dados do produto" />
 
 	<Grid direction="column" gap="m">
 		{#if errorMsg}
@@ -87,14 +83,7 @@
 		{:else}
 			<form onsubmit={handleSave}>
 				<Grid direction="column" gap="m">
-					<wa-input
-						id="item-name"
-						label="Nome do Produto"
-						type="text"
-						value={name}
-						oninput={(e: any) => (name = e.target.value)}
-						required
-					></wa-input>
+					<wa-input id="item-name" label="Nome do Produto" type="text" value={name} oninput={(e: any) => (name = e.target.value)} required></wa-input>
 
 					<wa-input
 						id="item-qty"
@@ -106,19 +95,12 @@
 						required
 					></wa-input>
 
-					<wa-textarea
-						id="item-details"
-						label="Detalhes / Observações"
-						value={details}
-						oninput={(e: any) => (details = e.target.value)}
-						rows="3"
+					<wa-textarea id="item-details" label="Detalhes / Observações" value={details} oninput={(e: any) => (details = e.target.value)} rows="3"
 					></wa-textarea>
 
 					<Grid gap="m" justify="end">
 						<wa-button href="/lists/{listId}"> Cancelar </wa-button>
-						<wa-button type="submit" variant="brand" loading={loading ? true : undefined}>
-							Guardar Alterações
-						</wa-button>
+						<wa-button type="submit" variant="brand" loading={loading ? true : undefined}> Guardar Alterações </wa-button>
 					</Grid>
 				</Grid>
 			</form>

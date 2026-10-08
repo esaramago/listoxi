@@ -2,10 +2,20 @@ import PocketBase from 'pocketbase'
 import { writable } from 'svelte/store'
 import { PUBLIC_POCKETBASE_URL } from '$env/static/public'
 
-const PB_URL =
-	PUBLIC_POCKETBASE_URL || (import.meta.env.DEV ? 'http://127.0.0.1:8090' : window.location.origin)
+const PB_URL = PUBLIC_POCKETBASE_URL || (import.meta.env.DEV ? 'http://127.0.0.1:8090' : window.location.origin)
 
 export const pb = new PocketBase(PB_URL)
+
+// Ensure browser and any proxy never cache PocketBase API requests
+pb.beforeSend = (url, options) => {
+	options.cache = 'no-store'
+	options.headers = {
+		...options.headers,
+		'Cache-Control': 'no-cache, no-store, must-revalidate',
+		Pragma: 'no-cache'
+	}
+	return { url, options }
+}
 
 // Svelte store for tracking auth state
 export const currentUser = writable(pb.authStore.model)
@@ -54,9 +64,7 @@ export async function inviteUserByEmail(email: string): Promise<string> {
 						JSON.stringify(createErr.data).toLowerCase().includes('validation_invalid_email'))
 
 				if (isUniqueConstraint) {
-					throw new Error(
-						`O utilizador com o email "${email}" já tem conta mas o seu perfil está privado.`
-					)
+					throw new Error(`O utilizador com o email "${email}" já tem conta mas o seu perfil está privado.`)
 				}
 				throw createErr
 			}

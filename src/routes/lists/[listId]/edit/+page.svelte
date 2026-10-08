@@ -78,9 +78,7 @@
 			}
 
 			// Membros resolvidos que o utilizador manteve
-			const keptUserIds = sharedMembers
-				.filter((m) => !m.isPending && m.id)
-				.map((m) => m.id as string)
+			const keptUserIds = sharedMembers.filter((m) => !m.isPending && m.id).map((m) => m.id as string)
 
 			// Emails pendentes que o utilizador manteve ou adicionou
 			const currentPendingEmails = sharedMembers.filter((m) => m.isPending).map((m) => m.email)
@@ -103,9 +101,7 @@
 						if (
 							err.status === 400 ||
 							err.status === 403 ||
-							(err instanceof Error &&
-								!err.message.includes('fetch') &&
-								!err.message.includes('network'))
+							(err instanceof Error && !err.message.includes('fetch') && !err.message.includes('network'))
 						) {
 							throw err
 						}
@@ -139,11 +135,7 @@
 </script>
 
 <div class="container">
-	<Header
-		backHref="/lists/{listId}"
-		title="Editar Lista"
-		subtitle="Altera o nome, emoji ou partilha da lista"
-	/>
+	<Header backHref="/lists/{listId}" title="Editar Lista" subtitle="Altera o nome, emoji ou partilha da lista" />
 
 	{#if !$listData}
 		<div class="loading-state">A carregar detalhes da lista...</div>
@@ -174,9 +166,7 @@
 
 					<Grid gap="m" justify="end">
 						<wa-button href="/lists/{listId}"> Cancelar </wa-button>
-						<wa-button type="submit" variant="brand" loading={loading ? true : undefined}>
-							Guardar Alterações
-						</wa-button>
+						<wa-button type="submit" variant="brand" loading={loading ? true : undefined}> Guardar Alterações </wa-button>
 					</Grid>
 				</Grid>
 			</form>

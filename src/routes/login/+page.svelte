@@ -94,18 +94,9 @@
 							required
 							password-toggle
 						></wa-input>
-						<button type="button" onclick={() => (isResetMode = true)} class="btn-link">
-							Esqueceste-te da palavra-passe?
-						</button>
+						<button type="button" onclick={() => (isResetMode = true)} class="btn-link"> Esqueceste-te da palavra-passe? </button>
 
-						<wa-button
-							type="submit"
-							variant="brand"
-							class="btn-submit"
-							loading={loading ? true : undefined}
-						>
-							Entrar
-						</wa-button>
+						<wa-button type="submit" variant="brand" class="btn-submit" loading={loading ? true : undefined}> Entrar </wa-button>
 					</Grid>
 				</form>
 			{:else}
@@ -121,18 +112,9 @@
 							required
 						></wa-input>
 
-						<wa-button
-							type="submit"
-							variant="brand"
-							class="btn-submit"
-							loading={loading ? true : undefined}
-						>
-							Enviar instruções
-						</wa-button>
+						<wa-button type="submit" variant="brand" class="btn-submit" loading={loading ? true : undefined}> Enviar instruções </wa-button>
 
-						<button type="button" onclick={() => (isResetMode = false)} class="btn-back">
-							Voltar para o Login
-						</button>
+						<button type="button" onclick={() => (isResetMode = false)} class="btn-back"> Voltar para o Login </button>
 					</Grid>
 				</form>
 			{/if}

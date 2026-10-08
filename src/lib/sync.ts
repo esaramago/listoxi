@@ -48,7 +48,7 @@ export async function triggerSync() {
 		const localLists = await db.lists.toArray()
 		for (const list of localLists) {
 			// Resolve any pending offline shared emails to user IDs first!
-			let updatedSharedWith = [...list.shared_with]
+			const updatedSharedWith = [...list.shared_with]
 			let emailsResolved = false
 
 			if (list.shared_emails && list.shared_emails.length > 0) {
@@ -173,21 +173,32 @@ export async function triggerSync() {
 
 		// 3. Fetch remote lists (owned or shared with the user)
 		const remoteLists = await pb.collection('lists').getFullList({
-			sort: '-created'
+			sort: '-created',
+			requestKey: null
 		})
-		const remoteListIds = remoteLists.map((l) => l.id)
+
+		// Validate that returned lists belong to or are shared with the authenticated user
+		const validRemoteLists = remoteLists.filter((l) => {
+			const isOwner = l.owner === user.id
+			const isShared = Array.isArray(l.shared_with) && l.shared_with.includes(user.id)
+			return isOwner || isShared
+		})
+		const validRemoteListIds = validRemoteLists.map((l) => l.id)
 
 		// Delete local lists that are marked synced but do not exist on the remote server
 		const currentLists = await db.lists.toArray()
 		for (const localList of currentLists) {
-			if (localList.sync_status === 'synced' && !remoteListIds.includes(localList.id)) {
-				await db.lists.delete(localList.id)
-				await db.items.where('list').equals(localList.id).delete()
+			if (localList.sync_status === 'synced' && !validRemoteListIds.includes(localList.id)) {
+				// Only delete if this local list was owned by or shared with this user
+				if (localList.owner === user.id || localList.shared_with?.includes(user.id)) {
+					await db.lists.delete(localList.id)
+					await db.items.where('list').equals(localList.id).delete()
+				}
 			}
 		}
 
 		// Upsert remote lists into local IndexedDB
-		for (const rList of remoteLists) {
+		for (const rList of validRemoteLists) {
 			const existing = await db.lists.get(rList.id)
 			// Only overwrite if local status is 'synced' (no offline pending edits)
 			if (!existing || existing.sync_status === 'synced') {
@@ -204,11 +215,12 @@ export async function triggerSync() {
 		}
 
 		// 4. Fetch remote items for all lists
-		if (remoteListIds.length > 0) {
+		if (validRemoteListIds.length > 0) {
 			// PocketBase filter helper to get items in user's lists
-			const listFilter = remoteListIds.map((id) => `list="${id}"`).join('||')
+			const listFilter = validRemoteListIds.map((id) => `list="${id}"`).join('||')
 			const remoteItems = await pb.collection('items').getFullList({
-				filter: listFilter
+				filter: listFilter,
+				requestKey: null
 			})
 			const remoteItemIds = remoteItems.map((i) => i.id)
 
@@ -216,11 +228,7 @@ export async function triggerSync() {
 			const currentItems = await db.items.toArray()
 			for (const localItem of currentItems) {
 				// Only delete if it belongs to one of the fetched lists
-				if (
-					localItem.sync_status === 'synced' &&
-					remoteListIds.includes(localItem.list) &&
-					!remoteItemIds.includes(localItem.id)
-				) {
+				if (localItem.sync_status === 'synced' && validRemoteListIds.includes(localItem.list) && !remoteItemIds.includes(localItem.id)) {
 					await db.items.delete(localItem.id)
 				}
 			}

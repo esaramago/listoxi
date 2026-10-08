@@ -7,24 +7,7 @@
 		label?: string
 	} = $props()
 
-	const emojis = [
-		'🍏',
-		'🛒',
-		'🏡',
-		'🍕',
-		'💊',
-		'🎒',
-		'📚',
-		'🛠️',
-		'🐶',
-		'👕',
-		'🎁',
-		'⚡',
-		'🎉',
-		'🚗',
-		'💼',
-		'❤️'
-	]
+	const emojis = ['🍏', '🛒', '🏡', '🍕', '💊', '🎒', '📚', '🛠️', '🐶', '👕', '🎁', '⚡', '🎉', '🚗', '💼', '❤️']
 
 	function selectEmoji(em: string) {
 		if (value === em) {
@@ -41,12 +24,7 @@
 	{/if}
 	<div class="emoji-grid">
 		{#each emojis as em}
-			<button
-				type="button"
-				class="emoji-option {value === em ? 'selected' : ''}"
-				onclick={() => selectEmoji(em)}
-				aria-label="Escolher emoji {em}"
-			>
+			<button type="button" class="emoji-option {value === em ? 'selected' : ''}" onclick={() => selectEmoji(em)} aria-label="Escolher emoji {em}">
 				{em}
 			</button>
 		{/each}

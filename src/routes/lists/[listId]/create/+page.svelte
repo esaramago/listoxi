@@ -53,11 +53,7 @@
 </script>
 
 <div class="container">
-	<Header
-		backHref="/lists/{listId}"
-		title="Adicionar Produto"
-		subtitle="Indique o nome, quantidade e detalhes do produto"
-	/>
+	<Header backHref="/lists/{listId}" title="Adicionar Produto" subtitle="Indique o nome, quantidade e detalhes do produto" />
 
 	<Grid direction="column" gap="m">
 		{#if errorMsg}
@@ -100,9 +96,7 @@
 
 				<Grid gap="m" justify="end">
 					<wa-button href="/lists/{listId}"> Cancelar </wa-button>
-					<wa-button type="submit" variant="brand" loading={loading ? true : undefined}>
-						Adicionar Produto
-					</wa-button>
+					<wa-button type="submit" variant="brand" loading={loading ? true : undefined}> Adicionar Produto </wa-button>
 				</Grid>
 			</Grid>
 		</form>

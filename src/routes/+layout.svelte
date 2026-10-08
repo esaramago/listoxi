@@ -59,10 +59,7 @@
 
 <svelte:head>
 	<title>Listoxi - Lista de Compras Offline</title>
-	<meta
-		name="description"
-		content="Aplicação de lista de compras offline-first com sincronização em tempo real."
-	/>
+	<meta name="description" content="Aplicação de lista de compras offline-first com sincronização em tempo real." />
 </svelte:head>
 
 {#if componentsLoaded}

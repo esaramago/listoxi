@@ -58,7 +58,7 @@
 				<wa-icon slot="icon" name={isDark ? 'sun' : 'moon'}></wa-icon>
 				Alternar Tema
 			</wa-dropdown-item>
-			<wa-dropdown-item onclick={goToAdmin()}>
+			<wa-dropdown-item onclick={goToAdmin}>
 				<wa-icon slot="icon" name="cog"></wa-icon>
 				Administração
 			</wa-dropdown-item>

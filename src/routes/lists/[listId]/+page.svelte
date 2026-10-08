@@ -6,7 +6,7 @@
 	import { triggerSync } from '@/lib/sync'
 	import Grid from '@/components/ui/Grid.svelte'
 	import Header from '@/components/Header.svelte'
-  import ProductCard from '@/components/ProductCard.svelte'
+	import ProductCard from '@/components/ProductCard.svelte'
 	import { pb, currentUser } from '@/lib/pb'
 	import SyncBadge from '@/components/SyncBadge.svelte'
 
@@ -187,13 +187,13 @@
 					<span>
 						{#if $list.emoji}
 							{$list.emoji}
-						{:else if $list.name.toLowerCase().includes('casa') || $list.name
+						{:else if $list.name.toLowerCase().includes('casa') || $list.name.toLowerCase().includes('padrões') || $list.name
 								.toLowerCase()
-								.includes('padrões') || $list.name.toLowerCase().includes('louriceira')}
+								.includes('louriceira')}
 							🏡
-						{:else if $list.name.toLowerCase().includes('lidl') || $list.name
+						{:else if $list.name.toLowerCase().includes('lidl') || $list.name.toLowerCase().includes('continente') || $list.name
 								.toLowerCase()
-								.includes('continente') || $list.name.toLowerCase().includes('compras')}
+								.includes('compras')}
 							🛒
 						{:else}
 							🍏
@@ -297,16 +297,9 @@
 
 			<!-- Collapsible Bought Items -->
 			<div>
-				<button
-					onclick={() => (showBought = !showBought)}
-					onkeydown={(e) => e.key === 'Enter' && (showBought = !showBought)}
-				>
+				<button onclick={() => (showBought = !showBought)} onkeydown={(e) => e.key === 'Enter' && (showBought = !showBought)}>
 					<wa-icon name={showBought ? 'chevron-up' : 'chevron-down'} class="chevron-icon"></wa-icon>
-					<span
-						>Concluídos {showBought && boughtItemsData
-							? `(${boughtItemsData.length} itens)`
-							: ''}</span
-					>
+					<span>Concluídos {showBought && boughtItemsData ? `(${boughtItemsData.length} itens)` : ''}</span>
 				</button>
 
 				{#if showBought}
@@ -320,7 +313,7 @@
 									productQuantity={item.quantity}
 									productDetails={item.details}
 									productId={item.id}
-									isBought="true"
+									isBought={true}
 									{listId}
 									toggleBought={() => toggleBought(item.id)}
 									deleteItem={() => deleteItem(item.id)}
