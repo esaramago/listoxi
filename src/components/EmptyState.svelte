@@ -1,28 +1,28 @@
 <script lang="ts">
-import Grid from './ui/Grid.svelte'
-import type { Snippet } from 'svelte'
+	import Grid from './ui/Grid.svelte'
+	import type { Snippet } from 'svelte'
 
-let {
-  icon = 'cloud',
-  title,
-  subtitle,
-  actionText,
-  actionHref,
-  actionIcon = 'plus',
-  children
-}: {
-  icon?: string
-  title: string
-  subtitle?: string
-  actionText?: string
-  actionHref?: string
-  actionIcon?: string
-  children?: Snippet
-} = $props()
+	let {
+		icon = 'cloud',
+		title,
+		subtitle,
+		actionText,
+		actionHref,
+		actionIcon = 'plus',
+		children
+	}: {
+		icon?: string
+		title: string
+		subtitle?: string
+		actionText?: string
+		actionHref?: string
+		actionIcon?: string
+		children?: Snippet
+	} = $props()
 </script>
 
 <Grid direction="column" align="center" gap="m" class="empty-state-card">
-  <wa-icon name={icon} class="empty-state-icon"></wa-icon>
+	<wa-icon name={icon} class="empty-state-icon"></wa-icon>
 	<div>
 		<h3 class="empty-state-title">{title}</h3>
 		{#if subtitle}

@@ -74,22 +74,29 @@
 			{#if !isResetMode}
 				<form onsubmit={handleLogin}>
 					<Grid direction="column" gap="m">
-						<Grid direction="column" gap="xs">
-							<label for="email">Email</label>
-							<input id="email" type="email" placeholder="exemplo@email.com" value={email} oninput={(e: any) => (email = e.target.value)} required />
-						</Grid>
+            <Grid direction="column" gap="xs">
+              <label for="email">Email</label>
+              <input
+                id="email"
+                type="email"
+                placeholder="exemplo@email.com"
+                value={email}
+                oninput={(e: any) => (email = e.target.value)}
+                required
+              />
+            </Grid>
 
-						<Grid direction="column" gap="xs">
-							<label for="password">Palavra-passe</label>
-							<input
-								id="password"
-								type="password"
-								placeholder="••••••••"
-								value={password}
-								oninput={(e: any) => (password = e.target.value)}
-								required
-							/>
-						</Grid>
+            <Grid direction="column" gap="xs">
+              <label for="password">Palavra-passe</label>
+              <input
+                id="password"
+                type="password"
+                placeholder="••••••••"
+                value={password}
+                oninput={(e: any) => (password = e.target.value)}
+                required
+              />
+            </Grid>
 						<button type="button" onclick={() => (isResetMode = true)} class="btn-link"> Esqueceste-te da palavra-passe? </button>
 
 						<wa-button type="submit" variant="brand" class="btn-submit" loading={loading ? true : undefined}> Entrar </wa-button>

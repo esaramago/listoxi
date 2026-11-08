@@ -14,7 +14,7 @@
 	// Reactive query for lists with their corresponding item counts
 	const listsWithCounts = liveQuery(async () => {
 		const allLists = await db.lists.where('sync_status').notEqual('deleted').toArray()
-		const result = [];
+		const result = []
 		for (const list of allLists) {
 			const count = await db.items
 				.where('list')
@@ -131,7 +131,7 @@
 		}
 	}
 
-	let isDark = $state(false);
+	let isDark = $state(false)
 
 	// Watch theme state
 	if (typeof window !== 'undefined') {
@@ -149,12 +149,9 @@
 		}
 	}
 
-  function goToAdmin() {
-    window.open(
-      'https://listoxi-admin.emanuelsaramago.com/_',
-      '_blank'
-    )
-  }
+	function goToAdmin() {
+		window.open('https://listoxi-admin.emanuelsaramago.com/_', '_blank')
+	}
 </script>
 
 <div class="container">
@@ -164,7 +161,7 @@
 				<wa-icon slot="icon" name={isDark ? 'sun' : 'moon'}></wa-icon>
 				Alternar Tema
 			</wa-dropdown-item>
-			<wa-dropdown-item onclick={goToAdmin()}>
+			<wa-dropdown-item onclick={goToAdmin}>
 				<wa-icon slot="icon" name="cog"></wa-icon>
 				Administra\u00e7\u00e3o
 			</wa-dropdown-item>
@@ -179,9 +176,7 @@
 
 	<div>
 		{#if !$listsWithCounts}
-			<div class="loading-state">
-				A carregar listas...
-			</div>
+			<div class="loading-state">A carregar listas...</div>
 		{:else if $listsWithCounts.length === 0}
 			<EmptyState
 				icon="cloud"
@@ -192,170 +187,72 @@
 				actionIcon="plus"
 			/>
 		{:else}
-      <Grid direction="column">
-        <Grid justify="space-between" align="center">
-				  <SyncBadge />
-          <wa-button href="/lists/create" variant="brand" appearance="plain">
-            <wa-icon name="plus"></wa-icon>
-            Adicionar lista
-          </wa-button>
-        </Grid>
-        
-        <div class="lists-container">
-          {#each displayLists as list, index (list.id)}
-            <div 
-              class="draggable-list" 
-              class:dragging={draggedId === list.id}
-              class:drag-over={dragOverIndex === index}
-              draggable="true"
-              ondragstart={(e) => handleDragStart(e, list.id)}
-              ondragover={(e) => handleDragOver(e, index)}
-              ondragleave={handleDragLeave}
-              ondrop={(e) => handleDrop(e, index)}
-              ondragend={handleDragEnd}
-            >
-              <div class="drag-handle">
-                <wa-icon name="grip-vertical" class="drag-icon"></wa-icon>
-              </div>
-              <a href="/lists/{list.id}" class="card">
-                <wa-card>
-                  <div>
-                    {#if list.emoji}
-                      {list.emoji}
-                    {:else}
-                      \ud83c\udf4f
-                    {/if}
-                    <span>{list.name}</span>
-                  </div>
-                  <div class="card__count">
-                    <span class="card__number">{list.count}</span>
-                    <span class="card__label">
-                      {list.count === 1 ? 'produto' : 'produtos'}
-                    </span>
-                  </div>
-                </wa-card>
-              </a>
-            </div>
-          {/each}
-        </div>
-      </Grid>
+			<Grid direction="column">
+				<Grid justify="space-between" align="center">
+					<SyncBadge />
+					<wa-button href="/lists/create" variant="brand" appearance="plain">
+						<wa-icon name="plus"></wa-icon>
+						Adicionar lista
+					</wa-button>
+				</Grid>
+				{#each $listsWithCounts as list (list.id)}
+					<a href="/lists/{list.id}" class="card">
+						<wa-card>
+							<div>
+								{#if list.emoji}
+									{list.emoji}
+								{:else}
+									🍏
+								{/if}
+								<span>{list.name}</span>
+							</div>
+							<div class="card__count">
+								<span class="card__number">{list.count}</span>
+								<span class="card__label">
+									{list.count === 1 ? 'produto' : 'produtos'}
+								</span>
+							</div>
+						</wa-card>
+					</a>
+				{/each}
+			</Grid>
 		{/if}
 	</div>
-
 </div>
 
 <style>
-.loading-state {
-  text-align: center;
-  padding: var(--wa-space-2xl);
-  color: var(--wa-color-neutral-60);
-}
-
-.lists-container {
-  position: relative;
-  width: 100%;
-}
-
-.draggable-list {
-  display: flex;
-  width: 100%;
-  align-items: center;
-  gap: var(--wa-space-s);
-  cursor: grab;
-  transition: all 0.15s ease;
-  position: relative;
-  z-index: 1;
-  margin-bottom: 4px;
-}
-
-.draggable-list:active {
-  cursor: grabbing;
-}
-
-.draggable-list.dragging {
-  opacity: 0.5;
-  z-index: 100;
-  transform: scale(1.02);
-}
-
-.draggable-list.drag-over {
-  border-top: 2px solid var(--wa-color-brand-50);
-}
-
-.drag-handle {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 48px;
-  cursor: grab;
-  color: var(--wa-color-neutral-50);
-  flex-shrink: 0;
-  transition: color 0.2s ease, background-color 0.2s ease;
-  border-radius: var(--wa-border-radius-s);
-  -webkit-user-select: none;
-  user-select: none;
-}
-
-.drag-handle:hover {
-  color: var(--wa-color-brand-50);
-  background-color: var(--wa-color-neutral-10);
-}
-
-.draggable-list:hover .drag-handle {
-  color: var(--wa-color-brand-50);
-  background-color: var(--wa-color-neutral-10);
-}
-
-.drag-handle:active {
-  cursor: grabbing;
-}
-
-.drag-icon {
-  font-size: var(--wa-font-size-m);
-  pointer-events: none;
-}
-
-.card {
-  display: flex;
-  flex: 1;
-  text-decoration: none;
-  justify-content: space-between;
-  font-weight: 700;
-  font-size: var(--wa-font-size-xl);
-}
-
-.card wa-card {
-  width: 100%;
-}
-
-.card wa-card::part(body) {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.card__count {
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-}
-
-.card__number {
-  font-size: var(--wa-font-size-3xl);
-  font-weight: 900;
-}
-
-.card__label {
-  font-size: var(--wa-font-size-s);
-  font-weight: 400;
-}
-
-:global(.wa-dark) .drag-handle:hover {
-  background-color: var(--wa-color-neutral-20);
-}
-
-:global(.wa-dark) .draggable-list:hover .drag-handle {
-  background-color: var(--wa-color-neutral-20);
-}
+	.loading-state {
+		text-align: center;
+		padding: var(--wa-space-2xl);
+		color: var(--wa-color-neutral-60);
+	}
+	.card {
+		display: flex;
+		width: 100%;
+		text-decoration: none;
+		justify-content: space-between;
+		font-weight: 700;
+		font-size: var(--wa-font-size-xl);
+		wa-card {
+			width: 100%;
+			&::part(body) {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+			}
+		}
+	}
+	.card__count {
+		display: flex;
+		flex-direction: column;
+		text-align: center;
+	}
+	.card__number {
+		font-size: var(--wa-font-size-3xl);
+		font-weight: 900;
+	}
+	.card__label {
+		font-size: var(--wa-font-size-s);
+		font-weight: 400;
+	}
 </style>

@@ -26,7 +26,7 @@
 				import('@awesome.me/webawesome/dist/components/dropdown-item/dropdown-item.js'),
 				import('@awesome.me/webawesome/dist/components/select/select.js'),
 				import('@awesome.me/webawesome/dist/components/option/option.js')
-			]);
+			])
 			componentsLoaded = true
 		} catch (err) {
 			console.error('Failed to load Web Awesome elements:', err)
@@ -36,12 +36,12 @@
 		// Theme initialization
 		const savedTheme = localStorage.getItem('theme')
 		const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-		
+
 		if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
-			isDarkMode = true;
+			isDarkMode = true
 			document.documentElement.classList.add('wa-dark')
 		} else {
-			isDarkMode = false;
+			isDarkMode = false
 			document.documentElement.classList.remove('wa-dark')
 		}
 
@@ -74,9 +74,7 @@
 {#if componentsLoaded}
 	{@render children()}
 {:else}
-	<Grid class="loading-screen" align="center" justify="center">
-		A carregar componentes...
-	</Grid>
+	<Grid class="loading-screen" align="center" justify="center">A carregar componentes...</Grid>
 {/if}
 
 <style>

@@ -27,14 +27,10 @@
 			const ownerId = pb.authStore.model?.id || ''
 
 			// Membros resolvidos que o utilizador adicionou (se já forem registados)
-			const keptUserIds = sharedMembers
-				.filter(m => !m.isPending && m.id)
-				.map(m => m.id as string)
+			const keptUserIds = sharedMembers.filter((m) => !m.isPending && m.id).map((m) => m.id as string)
 
 			// Emails de utilizadores que necessitam de convite
-			const currentPendingEmails = sharedMembers
-				.filter(m => m.isPending)
-				.map(m => m.email)
+			const currentPendingEmails = sharedMembers.filter((m) => m.isPending).map((m) => m.email)
 
 			let sharedWithUserIds = [...keptUserIds]
 			let pendingEmails: string[] = []
@@ -51,7 +47,11 @@
 					} catch (err: any) {
 						// Se for um erro do servidor permanente (como 400 ou 403) ou erro de perfil privado,
 						// mostramos o erro diretamente ao utilizador em vez de ignorar e guardar offline.
-						if (err.status === 400 || err.status === 403 || (err instanceof Error && !err.message.includes('fetch') && !err.message.includes('network'))) {
+						if (
+							err.status === 400 ||
+							err.status === 403 ||
+							(err instanceof Error && !err.message.includes('fetch') && !err.message.includes('network'))
+						) {
 							throw err
 						}
 						console.error(`Error resolving email ${email}, queuing offline:`, err)
@@ -103,7 +103,7 @@
 					type="text"
 					placeholder="Ex: Supermercado, Casa..."
 					value={listName}
-					oninput={(e: any) => listName = e.target.value}
+					oninput={(e: any) => (listName = e.target.value)}
 					required
 				></wa-input>
 
@@ -112,12 +112,8 @@
 				<ListSharing bind:sharedMembers />
 
 				<Grid gap="m" justify="end">
-					<wa-button href="/">
-						Cancelar
-					</wa-button>
-					<wa-button type="submit" variant="brand" loading={loading ? true : undefined}>
-						Guardar Lista
-					</wa-button>
+					<wa-button href="/"> Cancelar </wa-button>
+					<wa-button type="submit" variant="brand" loading={loading ? true : undefined}> Guardar Lista </wa-button>
 				</Grid>
 			</Grid>
 		</form>

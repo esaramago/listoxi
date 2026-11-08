@@ -3,20 +3,17 @@
 		value = $bindable(''),
 		label = 'Escolhe um Emoji'
 	}: {
-		value?: string;
-		label?: string;
-	} = $props();
+		value?: string
+		label?: string
+	} = $props()
 
-	const emojis = [
-		'🍏', '🛒', '🏡', '🍕', '💊', '🎒', '📚', '🛠️',
-		'🐶', '👕', '🎁', '⚡', '🎉', '🚗', '💼', '❤️'
-	]
+	const emojis = ['🍏', '🛒', '🏡', '🍕', '💊', '🎒', '📚', '🛠️', '🐶', '👕', '🎁', '⚡', '🎉', '🚗', '💼', '❤️']
 
 	function selectEmoji(em: string) {
 		if (value === em) {
 			value = '' // Remove selection
 		} else {
-			value = em;
+			value = em
 		}
 	}
 </script>
@@ -27,12 +24,7 @@
 	{/if}
 	<div class="emoji-grid">
 		{#each emojis as em}
-			<button
-				type="button"
-				class="emoji-option {value === em ? 'selected' : ''}"
-				onclick={() => selectEmoji(em)}
-				aria-label="Escolher emoji {em}"
-			>
+			<button type="button" class="emoji-option {value === em ? 'selected' : ''}" onclick={() => selectEmoji(em)} aria-label="Escolher emoji {em}">
 				{em}
 			</button>
 		{/each}
