@@ -74,26 +74,29 @@
 			{#if !isResetMode}
 				<form onsubmit={handleLogin}>
 					<Grid direction="column" gap="m">
-						<wa-input
-							id="email"
-							label="Email"
-							type="email"
-							placeholder="exemplo@email.com"
-							value={email}
-							oninput={(e: any) => (email = e.target.value)}
-							required
-						></wa-input>
+            <Grid direction="column" gap="xs">
+              <label for="email">Email</label>
+              <input
+                id="email"
+                type="email"
+                placeholder="exemplo@email.com"
+                value={email}
+                oninput={(e: any) => (email = e.target.value)}
+                required
+              />
+            </Grid>
 
-						<wa-input
-							id="password"
-							type="password"
-							label="Palavra-passe"
-							placeholder="••••••••"
-							value={password}
-							oninput={(e: any) => (password = e.target.value)}
-							required
-							password-toggle
-						></wa-input>
+            <Grid direction="column" gap="xs">
+              <label for="password">Palavra-passe</label>
+              <input
+                id="password"
+                type="password"
+                placeholder="••••••••"
+                value={password}
+                oninput={(e: any) => (password = e.target.value)}
+                required
+              />
+            </Grid>
 						<button type="button" onclick={() => (isResetMode = true)} class="btn-link"> Esqueceste-te da palavra-passe? </button>
 
 						<wa-button type="submit" variant="brand" class="btn-submit" loading={loading ? true : undefined}> Entrar </wa-button>
@@ -155,12 +158,6 @@
 	}
 	.icon-success {
 		color: var(--wa-color-success-50);
-	}
-	.password-label-wrapper {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		width: 100%;
 	}
 	.btn-link {
 		background: none;
