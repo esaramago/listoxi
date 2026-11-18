@@ -60,8 +60,8 @@
 		}
 	}
 
-	// Reactive query for the list details
-	const list = liveQuery(() => db.lists.get(listId))
+	// Reactive query for the list details (null when not found)
+	const list = liveQuery(async () => (await db.lists.get(listId)) ?? null)
 
 	// Reactive query for open items
 	const openItems = liveQuery(() =>
@@ -180,8 +180,10 @@
 <div class="container">
 	<Header backHref="/">
 		{#snippet titleSnippet()}
-			{#if !$list}
+			{#if $list === undefined}
 				<h1 class="header-title">A carregar lista...</h1>
+			{:else if $list === null}
+				<h1 class="header-title">Lista não encontrada</h1>
 			{:else}
 				<Grid tag="h1" align="center" gap="xs" class="header-title">
 					<span>
@@ -257,7 +259,9 @@
 		{/snippet}
 	</Header>
 
-	{#if $list}
+	{#if $list === null}
+		<div class="empty-products">Esta lista não existe ou foi apagada.</div>
+	{:else if $list}
 		<Grid direction="column" gap="l">
 			<!-- Action line with "Adicionar" button -->
 			<Grid justify="space-between" align="center">

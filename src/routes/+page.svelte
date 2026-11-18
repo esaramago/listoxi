@@ -94,7 +94,7 @@
 					</wa-button>
 				</Grid>
 				{#each $listsWithCounts as list (list.id)}
-					<a href={resolve(`/lists/{list.id}`)} class="card">
+					<a href={resolve('/lists/[listId]', { listId: list.id })} class="card">
 						<wa-card>
 							<div>
 								{#if list.emoji}
