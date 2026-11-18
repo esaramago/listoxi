@@ -6,7 +6,7 @@
 	import EmptyState from '@/components/EmptyState.svelte'
 	import SyncBadge from '@/components/SyncBadge.svelte'
 	import Grid from '@/components/ui/Grid.svelte'
-  import { resolve } from '$app/paths'
+	import { resolve } from '$app/paths'
 
 	// Reactive query for lists with their corresponding item counts
 	const listsWithCounts = liveQuery(async () => {
