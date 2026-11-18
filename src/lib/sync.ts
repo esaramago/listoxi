@@ -202,16 +202,6 @@ export async function triggerSync() {
 			const existing = await db.lists.get(rList.id)
 			// Only overwrite if local status is 'synced' (no offline pending edits)
 			if (!existing || existing.sync_status === 'synced') {
-				// Merge user_sort_order: preserve current user's sort order from local
-				const existingUserSortOrder = existing?.user_sort_order || {};
-				const remoteUserSortOrder = rList.user_sort_order || {};
-				const mergedUserSortOrder = { ...remoteUserSortOrder };
-				
-				// Preserve current user's sort order from local if it exists
-				if (user && existingUserSortOrder[user.id] !== undefined) {
-					mergedUserSortOrder[user.id] = existingUserSortOrder[user.id];
-				}
-				
 				await db.lists.put({
 					id: rList.id,
 					name: rList.name,
@@ -291,16 +281,6 @@ export function setupRealtimeSubscriptions() {
 				if (isOwner || isShared) {
 					const existing = await db.lists.get(list.id)
 					if (!existing || existing.sync_status === 'synced') {
-						// Merge user_sort_order: preserve current user's sort order
-						const existingUserSortOrder = existing?.user_sort_order || {};
-						const remoteUserSortOrder = list.user_sort_order || {};
-						const mergedUserSortOrder = { ...remoteUserSortOrder };
-						
-						// Preserve current user's sort order from local if it exists
-						if (user && existingUserSortOrder[user.id] !== undefined) {
-							mergedUserSortOrder[user.id] = existingUserSortOrder[user.id];
-						}
-						
 						await db.lists.put({
 							id: list.id,
 							name: list.name,
