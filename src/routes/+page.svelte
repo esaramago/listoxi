@@ -1,15 +1,11 @@
 <script lang="ts">
 	import { liveQuery } from 'dexie'
 	import { db } from '@/lib/db'
-	import { pb, currentUser } from '@/lib/pb'
-	import { triggerSync } from '@/lib/sync'
+	import { pb } from '@/lib/pb'
 	import Header from '@/components/Header.svelte'
 	import EmptyState from '@/components/EmptyState.svelte'
 	import SyncBadge from '@/components/SyncBadge.svelte'
 	import Grid from '@/components/ui/Grid.svelte'
-
-	// Get current user ID
-	const userId = $derived($currentUser?.id || '');
 
 	// Reactive query for lists with their corresponding item counts
 	const listsWithCounts = liveQuery(async () => {
@@ -25,105 +21,6 @@
 		}
 		return result
 	})
-
-	// Derived sorted lists based on user's sort order
-	const sortedLists = $derived(
-		$listsWithCounts?.slice().sort((a, b) => {
-			const aOrder = a.user_sort_order?.[userId] ?? Number.MAX_SAFE_INTEGER;
-			const bOrder = b.user_sort_order?.[userId] ?? Number.MAX_SAFE_INTEGER;
-			return aOrder - bOrder;
-		}) || []
-	)
-
-	// Drag and drop state
-	let draggedId = $state<string | null>(null)
-	let dragOverIndex = $state<number | null>(null)
-
-	// Get the current order from sortedLists
-	const currentOrder = $derived(sortedLists.map(l => l.id))
-
-	// Display lists with drag reordering
-	const displayLists = $derived.by(() => {
-		if (draggedId === null || dragOverIndex === null) {
-			return sortedLists
-		}
-		const draggedIndex = currentOrder.indexOf(draggedId)
-		if (draggedIndex === -1 || draggedIndex === dragOverIndex) {
-			return sortedLists
-		}
-		const newOrder = [...currentOrder]
-		newOrder.splice(draggedIndex, 1)
-		newOrder.splice(dragOverIndex, 0, draggedId)
-		return newOrder.map(id => sortedLists.find(l => l.id === id)).filter(Boolean) as typeof sortedLists
-	})
-
-	function handleDragStart(e: DragEvent, listId: string) {
-		draggedId = listId
-		const dt = e.dataTransfer
-		if (dt) {
-			dt.setData('text/plain', listId)
-			dt.effectAllowed = 'move'
-		}
-	}
-
-	function handleDragOver(e: DragEvent, index: number) {
-		e.preventDefault()
-		dragOverIndex = index
-	}
-
-	function handleDragLeave() {
-		dragOverIndex = null
-	}
-
-	async function handleDrop(e: DragEvent, dropIndex: number) {
-		e.preventDefault()
-		
-		if (draggedId === null) {
-			draggedId = null
-			dragOverIndex = null
-			return
-		}
-
-		const draggedIndex = currentOrder.indexOf(draggedId)
-		
-		if (draggedIndex === -1 || draggedIndex === dropIndex) {
-			draggedId = null
-			dragOverIndex = null
-			return
-		}
-
-		// Build new order
-		const newOrder = [...currentOrder]
-		newOrder.splice(draggedIndex, 1)
-		newOrder.splice(dropIndex, 0, draggedId)
-
-		// Update all lists with new sort orders in the database
-		for (let i = 0; i < sortedLists.length; i++) {
-			const list = sortedLists[i]
-			const newIndex = newOrder.indexOf(list.id)
-			
-			const currentSortOrder = list.user_sort_order || {}
-			const updatedSortOrder = { ...currentSortOrder, [userId]: newIndex }
-			
-			await db.lists.update(list.id, {
-				user_sort_order: updatedSortOrder,
-				sync_status: list.sync_status === 'created' ? 'created' : 'updated',
-				updated: new Date().toISOString()
-			})
-		}
-
-		// Trigger sync in background
-		triggerSync()
-
-		// Reset drag state
-		draggedId = null
-		dragOverIndex = null
-	}
-
-	function handleDragEnd() {
-		draggedId = null
-		dragOverIndex = null
-	}
 
 	function logout() {
 		if (confirm('Deseja realmente sair?')) {
@@ -150,7 +47,7 @@
 	}
 
 	function goToAdmin() {
-		window.open('https://listoxi-admin.emanuelsaramago.com/_', '_blank')
+		window.open('https://admin.listoxi.pt/_', '_blank')
 	}
 </script>
 
@@ -163,7 +60,7 @@
 			</wa-dropdown-item>
 			<wa-dropdown-item onclick={goToAdmin}>
 				<wa-icon slot="icon" name="cog"></wa-icon>
-				Administra\u00e7\u00e3o
+				Administração
 			</wa-dropdown-item>
 			<wa-dropdown-item onclick={logout}>
 				<wa-icon slot="icon" name="arrow-right-from-bracket"></wa-icon>
