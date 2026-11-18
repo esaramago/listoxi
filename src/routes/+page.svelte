@@ -6,6 +6,7 @@
 	import EmptyState from '@/components/EmptyState.svelte'
 	import SyncBadge from '@/components/SyncBadge.svelte'
 	import Grid from '@/components/ui/Grid.svelte'
+  import { resolve } from '$app/paths'
 
 	// Reactive query for lists with their corresponding item counts
 	const listsWithCounts = liveQuery(async () => {
@@ -54,15 +55,15 @@
 <div class="container">
 	<Header title="Listoxi">
 		{#snippet actions()}
-			<wa-dropdown-item onclick={toggleTheme}>
+			<wa-dropdown-item onclick={toggleTheme} role="button" tabindex="0">
 				<wa-icon slot="icon" name={isDark ? 'sun' : 'moon'}></wa-icon>
 				Alternar Tema
 			</wa-dropdown-item>
-			<wa-dropdown-item onclick={goToAdmin}>
+			<wa-dropdown-item onclick={goToAdmin} role="button" tabindex="0">
 				<wa-icon slot="icon" name="cog"></wa-icon>
 				Administração
 			</wa-dropdown-item>
-			<wa-dropdown-item onclick={logout}>
+			<wa-dropdown-item onclick={logout} role="button" tabindex="0">
 				<wa-icon slot="icon" name="arrow-right-from-bracket"></wa-icon>
 				Sair da Conta
 			</wa-dropdown-item>
@@ -93,7 +94,7 @@
 					</wa-button>
 				</Grid>
 				{#each $listsWithCounts as list (list.id)}
-					<a href="/lists/{list.id}" class="card">
+					<a href={resolve(`/lists/{list.id}`)} class="card">
 						<wa-card>
 							<div>
 								{#if list.emoji}
